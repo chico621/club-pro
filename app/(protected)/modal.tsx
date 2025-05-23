@@ -1,82 +1,183 @@
-import { useLocalSearchParams, router } from "expo-router";
-import { useState } from "react";
-import { View, Alert, TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Platform, Text as RNText, Alert } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { H1 } from "@/components/ui/typography";
+import { supabase } from "@/config/supabase";
+import { useAuth } from "@/context/supabase-provider";
+import { useLocalSearchParams } from "expo-router";
 
-export default function BookingModal() {
-	const { type } = useLocalSearchParams();
-	const [name, setName] = useState("");
-	const [date, setDate] = useState(""); // e.g. "2025-06-03"
-	const [time, setTime] = useState(""); // e.g. "14:00"
+const appointmentLabels: Record<string, string> = {
+	wellness: "Wellness Evaluation",
+	club: "First Club Visit",
+	ambassador: "Ambassador Opportunity Call",
+};
 
-	const handleConfirm = () => {
-		if (!name || !date || !time) {
-			Alert.alert("Missing info", "Please enter your name, date, and time.");
-			return;
+export default function BookingScreen() {
+	const { session } = useAuth();
+	const { type } = useLocalSearchParams<{ type: string }>();
+	const appointmentType = appointmentLabels[type ?? ""] || "Wellness Evaluation";
+
+	const [userName, setUserName] = useState<string | null>(null);
+	const [step, setStep] = useState<"date" | "time" | "summary">("date");
+	const [date, setDate] = useState(new Date());
+	const [tempDate, setTempDate] = useState(date);
+	const [time, setTime] = useState<Date | null>(null);
+	const [tempTime, setTempTime] = useState(new Date());
+
+	useEffect(() => {
+		async function fetchUserDetails() {
+			if (!session?.user?.id) return;
+
+			const { data, error } = await supabase
+				.from("users")
+				.select("full_name")
+				.eq("id", session.user.id)
+				.single();
+
+			if (error) {
+				console.error("Error fetching user full_name:", error);
+				setUserName(null);
+			} else {
+				setUserName(data?.full_name ?? null);
+			}
 		}
 
-		// Basic validation for date and time format (YYYY-MM-DD and HH:MM)
-		const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-		const timeRegex = /^\d{2}:\d{2}$/;
+		fetchUserDetails();
+	}, [session]);
 
-		if (!dateRegex.test(date)) {
-			Alert.alert("Invalid Date", "Date must be in format YYYY-MM-DD.");
-			return;
+	const snapTo30Minutes = (selectedTime: Date) => {
+		const snapped = new Date(selectedTime);
+		const mins = snapped.getMinutes();
+		if (mins < 15) snapped.setMinutes(0);
+		else if (mins < 45) snapped.setMinutes(30);
+		else {
+			snapped.setHours(snapped.getHours() + 1);
+			snapped.setMinutes(0);
 		}
+		snapped.setSeconds(0);
+		snapped.setMilliseconds(0);
+		return snapped;
+	};
 
-		if (!timeRegex.test(time)) {
-			Alert.alert("Invalid Time", "Time must be in format HH:MM (24-hour).");
-			return;
-		}
-
-		// TODO: Save these fields separately in your database
-		Alert.alert(
-			"Booking Confirmed",
-			`Thanks ${name}, you booked a ${type} on ${date} at ${time}.`
+	const isFutureDateTime = (d: Date, t: Date) => {
+		const fullDateTime = new Date(
+			d.getFullYear(),
+			d.getMonth(),
+			d.getDate(),
+			t.getHours(),
+			t.getMinutes(),
+			0,
+			0
 		);
+		return fullDateTime > new Date();
+	};
 
-		router.back();
+	const handleBack = () => {
+		if (step === "time") setStep("date");
+		else if (step === "summary") setStep("time");
 	};
 
 	return (
-		<View className="flex-1 justify-center p-6 gap-y-4 bg-background">
-			<H1 className="text-center">Confirm Booking</H1>
-			<Text className="text-center">
-				You're booking: <Text className="font-bold">{type}</Text>
-			</Text>
+		<View className="flex-1 justify-start items-center gap-y-6 p-4 bg-white">
+			<View className="items-center mb-4">
+				<RNText className="text-xl font-bold mt-10">Confirm Booking</RNText>
+				<Text className="text-muted-foreground text-center">
+					You are booking a <Text className="font-semibold">{appointmentType}</Text>
+				</Text>
+			</View>
 
-			<TextInput
-				placeholder="Your Name"
-				className="border p-3 rounded-md bg-white"
-				value={name}
-				onChangeText={setName}
-			/>
+			{step === "date" && (
+				<>
+					<RNText className="text-lg">Select a Date</RNText>
+					<DateTimePicker
+						value={tempDate}
+						mode="date"
+						display={Platform.OS === "ios" ? "spinner" : "default"}
+						onChange={(e, selected) => selected && setTempDate(selected)}
+					/>
+					<Button
+						onPress={() => {
+							setDate(tempDate);
+							setStep("time");
+						}}
+					>
+						<Text>Next</Text>
+					</Button>
+				</>
+			)}
 
-			<TextInput
-				placeholder="Date (YYYY-MM-DD)"
-				className="border p-3 rounded-md bg-white"
-				keyboardType="numbers-and-punctuation"
-				value={date}
-				onChangeText={setDate}
-			/>
+			{step === "time" && (
+				<>
+					<RNText className="text-lg">Select a Time</RNText>
+					<DateTimePicker
+						value={tempTime}
+						mode="time"
+						display={Platform.OS === "ios" ? "spinner" : "default"}
+						onChange={(e, selected) => selected && setTempTime(selected)}
+						minuteInterval={30}
+					/>
+					<View className="flex-row gap-x-4 mt-4">
+						<Button variant="outline" onPress={handleBack}>
+							<Text>Back</Text>
+						</Button>
+						<Button
+							onPress={() => {
+								const snapped = snapTo30Minutes(tempTime);
+								if (!isFutureDateTime(date, snapped)) {
+									Alert.alert("Invalid Time", "Please choose a time in the future.");
+									return;
+								}
+								setTime(snapped);
+								setStep("summary");
+							}}
+						>
+							<Text>Next</Text>
+						</Button>
+					</View>
+				</>
+			)}
 
-			<TextInput
-				placeholder="Time (HH:MM, 24-hour)"
-				className="border p-3 rounded-md bg-white"
-				keyboardType="numbers-and-punctuation"
-				value={time}
-				onChangeText={setTime}
-			/>
+			{step === "summary" && time && (
+				<View className="items-center gap-y-4">
+					<Text>Date: {date.toDateString()}</Text>
+					<Text>
+						Time:{" "}
+						{time.toLocaleTimeString([], {
+							hour: "2-digit",
+							minute: "2-digit",
+						})}
+					</Text>
+					<View className="flex-row gap-x-4">
+						<Button variant="outline" onPress={handleBack}>
+							<Text>Back</Text>
+						</Button>
+						<Button
+							onPress={() => {
+								if (!isFutureDateTime(date, time)) {
+									Alert.alert("Invalid Time", "Please choose a time in the future.");
+									return;
+								}
 
-			<Button onPress={handleConfirm}>
-				<Text>Confirm Booking</Text>
-			</Button>
+								const formattedDate = date.toISOString().split("T")[0];
+								const formattedTime = time.toTimeString().slice(0, 5);
 
-			<Button variant="outline" onPress={() => router.back()}>
-				<Text>Cancel</Text>
-			</Button>
+								console.log("📦 Backend-ready booking data:");
+								console.log({
+									user: userName ?? "Unknown User",
+									appointmentType,
+									date: formattedDate,
+									time: formattedTime,
+								});
+
+								alert("Booking confirmed!");
+							}}
+						>
+							<Text>Confirm Booking</Text>
+						</Button>
+					</View>
+				</View>
+			)}
 		</View>
 	);
 }

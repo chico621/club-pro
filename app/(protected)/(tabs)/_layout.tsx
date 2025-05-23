@@ -48,6 +48,19 @@ export default function TabsLayout() {
 				}}
 			/>
 			<Tabs.Screen
+				name="myClub"
+				options={{
+					title: "My Club",
+					tabBarIcon: ({ focused }) => (
+						<MaterialIcons
+							name="people-alt"
+							size={20}
+							color={focused ? "black" : "gray"}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name="booking"
 				options={{
 					title: "Booking",

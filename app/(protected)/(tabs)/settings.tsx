@@ -18,7 +18,7 @@ export default function Settings() {
 			setLoading(true);
 			const { data, error } = await supabase
 				.from("users")
-				.select("full_name, email, role")
+				.select("full_name, email, role, club_id")
 				.eq("id", session.user.id)
 				.single();
 
