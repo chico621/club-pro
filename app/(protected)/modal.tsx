@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { supabase } from "@/config/supabase";
 import { useAuth } from "@/context/supabase-provider";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const appointmentLabels: Record<string, string> = {
 	wellness: "Wellness Evaluation",
@@ -14,6 +14,7 @@ const appointmentLabels: Record<string, string> = {
 };
 
 export default function BookingScreen() {
+	const router = useRouter();
 	const { session } = useAuth();
 	const { type } = useLocalSearchParams<{ type: string }>();
 	const appointmentType = appointmentLabels[type ?? ""] || "Wellness Evaluation";
@@ -153,24 +154,39 @@ export default function BookingScreen() {
 							<Text>Back</Text>
 						</Button>
 						<Button
-							onPress={() => {
+							onPress={async () => {
 								if (!isFutureDateTime(date, time)) {
 									Alert.alert("Invalid Time", "Please choose a time in the future.");
 									return;
 								}
 
-								const formattedDate = date.toISOString().split("T")[0];
-								const formattedTime = time.toTimeString().slice(0, 5);
+								const formattedDate = date.toISOString().split("T")[0]; // YYYY-MM-DD
+								const formattedTime = time.toTimeString().slice(0, 5); // HH:MM
 
-								console.log("📦 Backend-ready booking data:");
-								console.log({
-									user: userName ?? "Unknown User",
-									appointmentType,
-									date: formattedDate,
-									time: formattedTime,
-								});
+								const { error } = await supabase.from("bookings").insert([
+									{
+										user_id: session?.user?.id,
+										appointment_type: appointmentType,
+										appointment_date: formattedDate,
+										appointment_time: formattedTime,
+										duration_minutes: 30,
+									},
+								]);
 
-								alert("Booking confirmed!");
+								if (error) {
+									if (error.code === "23505") {
+										Alert.alert(
+											"Time Slot Unavailable",
+											"This time is already booked. Please choose another."
+										);
+									} else {
+										console.error("Booking error:", error);
+										Alert.alert("Booking Failed", "Something went wrong. Please try again.");
+									}
+								} else {
+									Alert.alert("Booking Confirmed", "Your appointment has been booked!");
+									router.back();
+								}
 							}}
 						>
 							<Text>Confirm Booking</Text>

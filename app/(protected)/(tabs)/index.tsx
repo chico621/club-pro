@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { router } from "expo-router";
-
+import { Linking } from "react-native";
 import { supabase } from "@/config/supabase";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -53,9 +53,27 @@ export default function Home() {
 				<Button
 					variant="default"
 					size="default"
+					onPress={() => {
+						Linking.openURL("https://telegram.com");
+					}}
+				>
+					<Text>Join our Community Channel!</Text>
+				</Button>
+
+				<Button
+					variant="default"
+					size="default"
+				//	onPress={() => {}}
+				>
+					<Text>Check In to Club</Text>
+				</Button>
+
+				<Button
+					variant="default"
+					size="default"
 					onPress={() => router.push("/JoinClub")}
 				>
-					<Text>Join a Club</Text>
+					<Text>Find my Club</Text>
 				</Button>
 
 				{isAdmin && (
