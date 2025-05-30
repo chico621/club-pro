@@ -5,8 +5,6 @@ MyDigiClub is a digital hub built using Expo and Supabase that helps users conne
 
 Whether you're launching a school club, hobby group, or local community, MyDigiClub empowers your members with a seamless mobile experience.
 
-⚠️ Note: This is a personal project using an opinionated stack. It’s not a framework or boilerplate, but a practical example of how to structure a scalable mobile app using current best practices.
-
 🔧 Tech Stack
 React Native + Expo
 
