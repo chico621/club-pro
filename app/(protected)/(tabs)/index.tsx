@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Linking } from "react-native";
 import { router } from "expo-router";
-import { Linking } from "react-native";
 import { supabase } from "@/config/supabase";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -60,10 +59,11 @@ export default function Home() {
 					<Text>Join our Community Channel!</Text>
 				</Button>
 
+				{/* HERE: Added navigation to ScanQRCode screen */}
 				<Button
 					variant="default"
 					size="default"
-				//	onPress={() => {}}
+					onPress={() => router.push("../barcodeScan/ScanQRCode")}
 				>
 					<Text>Check In to Club</Text>
 				</Button>
