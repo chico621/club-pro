@@ -1,27 +1,21 @@
-# Expo Supabase Starter
+MyDigiClub
 
-![social-preview-dark](https://github.com/user-attachments/assets/9697a7da-10aa-4661-bb76-b5bc0dd611f0)
+Introduction
+MyDigiClub is a digital hub built using Expo and Supabase that helps users connect, collaborate, and engage through clubs, events, and community features — all in one place. This project is built on a solid foundation of modern tools including Expo Router for navigation, Supabase for backend and authentication, Tailwind CSS for styling, React Hook Form and Zod for form validation, and TypeScript for type safety and clarity. This application was built using Vincent Flemings Expo + Supabase starter template.
 
-## Introduction
+Whether you're launching a school club, hobby group, or local community, MyDigiClub empowers your members with a seamless mobile experience.
 
-This repository serves as a comprehensive starter project for developing React Native and Expo applications with Supabase as the backend. It integrates various technologies such as Expo Router for navigation, Tailwind CSS for styling, React-Hook-Form for form handling, Zod for schema validation, and TypeScript for type safety. By leveraging these powerful tools, this starter template provides a robust foundation for building modern, scalable, and efficient mobile applications.
+🔧 Tech Stack
+React Native + Expo
 
-#### Disclaimer
+Supabase (auth, database, storage)
 
-This is not supposed to be a template, boilerplate or a framework. It is an opinionated guide that shows how to do some things in a certain way. You are not forced to do everything exactly as it is shown here, decide what works best for you and your team and stay consistent with your style.
+Expo Router
 
-## Table of Contents
+TypeScript
 
-- [💻 Application Overview](docs/application-overview.md)
-- [⚙️ Project Configuration](docs/project-configuration.md)
-- [🗄️ Project Structure](docs/project-structure.md)
-- [🧱 Components And Styling](docs/components-and-styling.md)
-- [🗃️ State Management](docs/state-management.md)
+Tailwind CSS
 
-## Contributing
+React Hook Form + Zod
 
-Contributions to this starter project are highly encouraged and welcome! If you have any suggestions, bug reports, or feature requests, please feel free to create an issue or submit a pull request. Let's work together to enhance the developer experience and make it easier for everyone to build exceptional Expo applications with Supabase.
-
-## License
-
-This repository is licensed under the MIT License. You are granted the freedom to use, modify, and distribute the code for personal or commercial purposes. For more details, please refer to the [LICENSE](https://github.com/FlemingVincent/supabase-starter/blob/main/LICENSE) file.
+Let’s build a better digital community experience together.
