@@ -16,14 +16,14 @@ export default function WelcomeScreen() {
 	const { colorScheme } = useColorScheme();
 	const appIcon =
 		colorScheme === "dark"
-			? require("@/assets/Herb.png")
-			: require("@/assets/Herb.png");
+	//	? require("@/assets/Herb.png")
+	//	: require("@/assets/Herb.png");
 
 	return (
 		<SafeAreaView style={[styles.safeArea, colorScheme === "dark" && styles.darkBackground]}>
 			{/* Top: App icon */}
 			<View style={styles.topContainer}>
-				<Image source={appIcon} style={styles.appIcon} resizeMode="contain" />
+				{/*}	<Image source={appIcon} style={styles.appIcon} resizeMode="contain" /> */}
 			</View>
 
 			{/* Middle: Heading + Description */}
@@ -123,10 +123,10 @@ const styles = StyleSheet.create({
 	},
 	primaryButton: {
 		backgroundColor: "#339966",
-		borderRadius: 30,
+		borderRadius: 10,
 		paddingVertical: 18,
 		justifyContent: "center",  // vertically center content
-		height: 54,                // explicit height
+		height: 45,                // explicit height
 	},
 	primaryButtonText: {
 		color: "white",
@@ -138,10 +138,10 @@ const styles = StyleSheet.create({
 	secondaryButton: {
 		borderColor: "#339966",
 		borderWidth: 2,
-		borderRadius: 30,
+		borderRadius: 10,
 		paddingVertical: 18,
 		justifyContent: "center",
-		height: 54,
+		height: 45,
 	},
 	secondaryButtonText: {
 		color: "#339966",

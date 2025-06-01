@@ -34,7 +34,7 @@ export default function Home() {
 	return (
 		<View style={styles.container}>
 			<View style={styles.headerCard}>
-				<H1 style={styles.heading}>Welcome Back</H1>
+				<H1 style={styles.heading}>{isAdmin ? "Club Owner's Hub" : "Welcome Back"}</H1>
 				<Muted style={styles.subtext}>
 					You are authenticated. Your session will persist even after closing the app.
 				</Muted>
@@ -52,6 +52,14 @@ export default function Home() {
 				<Button
 					variant="default"
 					size="default"
+					onPress={() => router.push("../Calender")}
+				>
+					<Text>Calender and Rota</Text>
+				</Button>
+
+				<Button
+					variant="default"
+					size="default"
 					onPress={() => {
 						Linking.openURL("https://telegram.com");
 					}}
@@ -59,7 +67,6 @@ export default function Home() {
 					<Text>Join our Community Channel!</Text>
 				</Button>
 
-				{/* HERE: Added navigation to ScanQRCode screen */}
 				<Button
 					variant="default"
 					size="default"

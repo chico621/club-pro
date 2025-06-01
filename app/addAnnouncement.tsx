@@ -8,17 +8,17 @@ import { Text } from "@/components/ui/text";
 import { H1 } from "@/components/ui/typography";
 
 export default function AddAnnouncement() {
-    const [title, setTitle] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
-        if (!title || !message) {
-            Alert.alert("Please fill in all fields.");
+        if (!message) {
+            Alert.alert("Please enter a message.");
             return;
         }
 
         setLoading(true);
+
         const {
             data: { user },
         } = await supabase.auth.getUser();
@@ -29,11 +29,24 @@ export default function AddAnnouncement() {
             return;
         }
 
+        // Get user's club_id
+        const { data: userData, error: userError } = await supabase
+            .from("users")
+            .select("club_id")
+            .eq("id", user.id)
+            .single();
+
+        if (userError || !userData?.club_id) {
+            Alert.alert("Failed to find your club.");
+            setLoading(false);
+            return;
+        }
+
         const { error } = await supabase.from("announcements").insert([
             {
-                title,
                 message,
-                created_by: user.id,
+                user_id: user.id,
+                club_id: userData.club_id,
             },
         ]);
 
@@ -43,7 +56,7 @@ export default function AddAnnouncement() {
             Alert.alert("Error", error.message);
         } else {
             Alert.alert("Success", "Announcement added!");
-            router.back(); // or router.push("/(protected)/announcements");
+            router.back();
         }
     };
 
@@ -52,15 +65,8 @@ export default function AddAnnouncement() {
             <H1 className="mb-4 text-center">Add Announcement</H1>
 
             <TextInput
-                className="border border-gray-300 rounded-md p-2 mb-4 text-base"
-                placeholder="Title"
-                value={title}
-                onChangeText={setTitle}
-            />
-
-            <TextInput
                 className="border border-gray-300 rounded-md p-2 mb-4 text-base h-32 text-start"
-                placeholder="Message"
+                placeholder="Write your announcement message here"
                 value={message}
                 onChangeText={setMessage}
                 multiline

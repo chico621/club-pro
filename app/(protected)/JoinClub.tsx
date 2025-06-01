@@ -13,10 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/supabase-provider";
 import { supabase } from "@/config/supabase";
-import { useNavigation } from '@react-navigation/native'; // <-- import this
+import BackButton from "../../components/backButton"; // your back button
 
 export default function JoinClub() {
-    const navigation = useNavigation(); // <-- get navigation object
     const { session } = useAuth();
     const userId = session?.user?.id;
 
@@ -61,13 +60,7 @@ export default function JoinClub() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            {/* Back Button */}
-            <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={styles.backButton}
-            >
-                <Text style={styles.backButtonText}>← Back</Text>
-            </TouchableOpacity>
+            <BackButton />
 
             <H1 style={styles.header}>Join a Club</H1>
 
@@ -122,19 +115,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#F9FAFB", // example light background
         paddingHorizontal: 16,
         paddingVertical: 24,
-    },
-    backButton: {
-        marginBottom: 12,
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        alignSelf: 'flex-start',
-        borderRadius: 8,
-        backgroundColor: '#E5E7EB', // light gray bg
-    },
-    backButtonText: {
-        fontSize: 16,
-        color: '#3B82F6', // blue
-        fontWeight: '600',
     },
     header: {
         marginBottom: 24,

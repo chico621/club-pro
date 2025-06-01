@@ -7,20 +7,18 @@ import {
     StatusBar,
     StyleSheet,
     View,
-    Pressable,
-    Text,
     Alert,
 } from "react-native";
 import { useEffect, useRef } from "react";
-import { Overlay } from "./Overlay"; // adjust the path if needed
+import Overlay from "./Overlay";
 import { supabase } from "@/config/supabase";
+import BackButton from "../../../components/backButton";
 
 export default function ScanQRCode() {
     const router = useRouter();
     const qrLock = useRef(false);
     const appState = useRef(AppState.currentState);
 
-    // UUID v4 regex to validate scanned club IDs
     const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     useEffect(() => {
@@ -42,7 +40,6 @@ export default function ScanQRCode() {
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!data || qrLock.current) return;
 
-        // Validate UUID v4 format
         if (!uuidV4Regex.test(data)) {
             Alert.alert("Invalid QR Code", "Scanned QR code is not a valid club ID.");
             return;
@@ -107,30 +104,17 @@ export default function ScanQRCode() {
 
             <Overlay />
 
-            <View style={styles.backButtonContainer}>
-                <Pressable onPress={() => router.back()} style={styles.backButton}>
-                    <Text style={styles.backButtonText}>← Back</Text>
-                </Pressable>
-            </View>
+            {/* ✅ Use the reusable BackButton */}
+            <BackButton style={styles.backButtonPosition} />
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    backButtonContainer: {
+    backButtonPosition: {
         position: "absolute",
         top: 50,
         left: 20,
         zIndex: 10,
-    },
-    backButton: {
-        backgroundColor: "rgba(0,0,0,0.6)",
-        paddingVertical: 8,
-        paddingHorizontal: 14,
-        borderRadius: 8,
-    },
-    backButtonText: {
-        color: "white",
-        fontSize: 18,
     },
 });
