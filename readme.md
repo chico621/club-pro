@@ -1,8 +1,8 @@
-MyDigiClub
+# MyDigiClub
 
 Tbc...
 
-🔧 Tech Stack
+## 🔧 Tech Stack
 
 - React Native + Expo
 - Supabase (auth, database, storage)
