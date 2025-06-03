@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/supabase-provider";
 import { supabase } from "@/config/supabase";
-import BackButton from "../../components/backButton"; // your back button
+import BackButton from "../../components/backButton";
 
 export default function JoinClub() {
     const { session } = useAuth();

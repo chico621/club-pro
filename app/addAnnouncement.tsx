@@ -60,6 +60,9 @@ export default function AddAnnouncement() {
         }
     };
 
+    // Export StyleSheet for consistent styling
+    // const styles = StyleSheet.create({
+
     return (
         <View className="flex-1 p-4 bg-background">
             <H1 className="mb-4 text-center">Add Announcement</H1>

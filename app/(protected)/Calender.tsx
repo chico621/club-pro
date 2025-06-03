@@ -112,9 +112,10 @@ export default function CalendarScreen() {
                         calendarBackground: "#fff",
                         textSectionTitleColor: "#000",
                         selectedDayBackgroundColor: "#ffa726",
-                        selectedDayTextColor: "#fff",
+                        selectedDayTextColor: "#fff", // CHANGE SELECTED DAY TEXT COLOR
                         todayTextColor: "#ffa726",
                         dayTextColor: "#2d4150",
+                        todayBackgroundColor: "#da3613", // CHANGE TODAY'S BACKGROUND COLOR
                         arrowColor: "#ffa726",
                         monthTextColor: "#000",
                     }}

@@ -4,16 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/config/supabase";
 import { useFocusEffect } from "expo-router";
 
-interface ClubVisit {
-    club_id: string;
-    visit_time: string;
-}
-
-interface ClubInfo {
-    id: string;
-    name: string;
-}
-
 const STORAGE_KEY_VISITS = "cached_visits_by_club";
 const STORAGE_KEY_CLUB_NAMES = "cached_club_names";
 

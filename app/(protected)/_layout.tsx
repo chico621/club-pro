@@ -24,6 +24,7 @@ export default function ProtectedLayout() {
 			}}
 		>
 			<Stack.Screen name="(tabs)" />
+			<Stack.Screen name="myBookings" options={{ presentation: "modal" }} />
 			<Stack.Screen name="modal" options={{ presentation: "modal" }} />
 		</Stack>
 	);

@@ -15,7 +15,20 @@ export default function Booking() {
     const [selected, setSelected] = useState<string | null>(null);
 
     return (
-        <View className="flex-1 items-center justify-center bg-background p-4 gap-y-4">
+        <View className="flex-1 bg-background p-4 relative justify-center items-center gap-y-4">
+
+            {/* 🧭 Top-right small My Bookings button */}
+            <View className="absolute top-4 right-10 mt-20">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onPress={() => router.push("/(protected)/myBookings")}
+                >
+                    <Text>My Bookings</Text>
+                </Button>
+            </View>
+
+            {/* 📅 Booking content */}
             <H1 className="text-center">Bookings</H1>
             <Muted className="text-center">
                 Book today and get a free consultation with our nutritionist.
@@ -25,8 +38,7 @@ export default function Booking() {
                 <Button
                     key={option.value}
                     variant="outline"
-                    className={`w-full ${selected === option.value ? "bg-green-600 border-green-600" : ""
-                        }`}
+                    className={`w-full ${selected === option.value ? "bg-green-600 border-green-600" : ""}`}
                     onPress={() => setSelected(option.value)}
                 >
                     <Text className={selected === option.value ? "text-white" : ""}>
@@ -34,10 +46,11 @@ export default function Booking() {
                     </Text>
                 </Button>
             ))}
+
             <Muted className="text-center">
                 By booking, you agree to our{" "}
                 <Text className="text-blue-500">Terms of Service</Text> and{" "}
-                <Text className="text-blue-500">Privacy Policy</Text>.
+                <Text className="text-blue-500">Privacy Policy</Text>.{" "}
                 <Text className="text-blue-500">Learn more</Text>.
             </Muted>
 

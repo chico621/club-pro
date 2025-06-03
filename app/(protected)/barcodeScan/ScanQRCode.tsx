@@ -104,7 +104,6 @@ export default function ScanQRCode() {
 
             <Overlay />
 
-            {/* ✅ Use the reusable BackButton */}
             <BackButton style={styles.backButtonPosition} />
         </SafeAreaView>
     );

@@ -61,7 +61,7 @@ export default function Home() {
 					variant="default"
 					size="default"
 					onPress={() => {
-						Linking.openURL("https://telegram.com");
+						Linking.openURL("https://t.me/+G625YOFZFqphMWY0");
 					}}
 				>
 					<Text>Join our Community Channel!</Text>
